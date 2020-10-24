@@ -38,7 +38,7 @@ function fede() {
         icon: 'success',
         text: 'Producto guardado!',
         showConfirmButton: false,
-        timer: 1700
+        timer: 1500
     })
 }
 
@@ -74,6 +74,14 @@ function guardarProducto(e) {
         fede();
     }
 
+    limpiarForm();
+    mostrarProductos();
+}
+
+function limpiarForm () {
+    document.querySelector('#nombre').value = '';
+    document.querySelector('#cantidad').value = '';
+    document.querySelector('#precio').value = '';
 }
 
 function eliminarProductos() {
@@ -84,15 +92,30 @@ function mostrarProductos() {
     let productosExistentes = JSON.parse(localStorage.getItem("productos"));
 
     let table = document.querySelector('#table');
+    // eliminamos la tabla en pantalla para volver a dibujarla completa (esto evita duplicar los productos)
+    table.innerHTML = `<tr>
+            <th>Nombre</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Acción</th>
+        </tr>`;
 
-    productosExistentes.forEach(product => {
-        table.insertAdjacentHTML('beforeend', `<tr>
-            <td>${product.nombre}</td>
-            <td>${product.cantidad}</td>
-            <td>${product.precio}</td>
-            <td><button class="btn btn-danger">Delete</btn></td>
-        </tr>`);
-    });
+    if(productosExistentes !== null) {
+        productosExistentes.forEach(product => {
+            table.insertAdjacentHTML('beforeend', `<tr>
+                <td>${product.nombre}</td>
+                <td><span class="badge ${(product.cantidad > 0) ? 'badge-success' : 'badge-dark'}">${product.cantidad}</span></td>
+                <td>${product.precio}</td>
+                <td><button class="btn btn-danger" onclick="eliminarProducto(event)">Delete</btn></td>
+            </tr>`);
+        });
+    }
+}
+
+function eliminarProducto(e) {
+	console.log(e.path[2].cells[0].childNodes[0].data);
+
+    productos.splice(id, 1);
 }
 
 mostrarProductos();
