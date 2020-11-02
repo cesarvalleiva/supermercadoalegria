@@ -43,6 +43,7 @@ function fede() {
 }
 
 let productos = [];
+let id;
 
 function guardarProducto(e) {
     e.preventDefault();
@@ -51,7 +52,9 @@ function guardarProducto(e) {
     let cantidad = document.querySelector('#cantidad').value;
     let precio = document.querySelector('#precio').value;
 
+
     let producto = {
+        id: id,
         nombre: nombre,
         cantidad: cantidad,
         precio: precio
@@ -67,11 +70,13 @@ function guardarProducto(e) {
         productosExistentes.push(producto);
         localStorage.setItem('productos',JSON.stringify(productosExistentes));
         fede();
+        id++;
     } else {
         productos.push(producto);
         // [{}]
         localStorage.setItem('productos',JSON.stringify(productos));
         fede();
+        id++;
     }
 
     limpiarForm();
@@ -101,21 +106,24 @@ function mostrarProductos() {
         </tr>`;
 
     if(productosExistentes !== null) {
+
         productosExistentes.forEach(product => {
             table.insertAdjacentHTML('beforeend', `<tr>
                 <td>${product.nombre}</td>
-                <td><span class="badge ${(product.cantidad > 0) ? 'badge-success' : 'badge-dark'}">${product.cantidad}</span></td>
+                <td><span class="badge ${(product.cantidad > 0) ? 'badge-danger' : 'badge-dark'}">${product.cantidad}</span></td>
                 <td>${product.precio}</td>
-                <td><button class="btn btn-danger" onclick="eliminarProducto(event)">Delete</btn></td>
+                <td><button class="btn btn-danger" onclick="eliminarProducto(${product.id})">Delete</btn></td>
             </tr>`);
         });
     }
 }
 
-function eliminarProducto(e) {
-	console.log(e.path[2].cells[0].childNodes[0].data);
+function eliminarProducto(marco) {
+	// console.log(e.path[2].cells[0].childNodes[0].data);
 
-    productos.splice(id, 1);
+    console.log(marco);
+
+    // productos.splice(id, 1);
 }
 
 mostrarProductos();
